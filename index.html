@@ -189,7 +189,7 @@
                     </div>
                     <h3 class="font-serif text-2xl font-semibold text-wedding-gold pt-4">Diki</h3>
                     <p class="text-[10px] text-wedding-muted uppercase tracking-wider mt-0.5">Putra Dari</p>
-                    <p class="text-xs text-gray-200 font-medium leading-relaxed mt-1">Alm Ibu Yani <br>& Bapak Atang</p>
+                    <p class="text-xs text-gray-200 font-medium leading-relaxed mt-1">Almarhum Ibu Yani <br>& Bapak Atang</p>
                 </div>
 
                 <!-- Bride / Wanita -->
@@ -259,8 +259,6 @@
                 <!-- BARIS PERTAMA (Bergerak ke Kiri) -->
                 <div class="w-full overflow-hidden mb-3">
                     <div class="marquee-container marquee-left gap-3">
-                        <!-- Duplikasi agar pergerakan mulus tanpa putus -->
-                        <!-- Set 1 -->
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/fz9JrfQR/Whats-App-Image-2026-10-08-at-15-19-33-1.jpg')">
                             <img src="https://i.ibb.co.com/fz9JrfQR/Whats-App-Image-2026-10-08-at-15-19-33-1.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
@@ -276,7 +274,7 @@
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/twJv4jks/Whats-App-Image-2026-10-08-at-15-19-34.jpg')">
                             <img src="https://i.ibb.co.com/twJv4jks/Whats-App-Image-2026-10-08-at-15-19-34.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
-                        <!-- Set 2 (Duplikat untuk infinite loop) -->
+                        <!-- Duplikat untuk Infinite Loop -->
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/fz9JrfQR/Whats-App-Image-2026-10-08-at-15-19-33-1.jpg')">
                             <img src="https://i.ibb.co.com/fz9JrfQR/Whats-App-Image-2026-10-08-at-15-19-33-1.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
@@ -298,7 +296,6 @@
                 <!-- BARIS KEDUA (Bergerak ke Kanan) -->
                 <div class="w-full overflow-hidden">
                     <div class="marquee-container marquee-right gap-3">
-                        <!-- Set 1 -->
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/twkss37q/Whats-App-Image-2026-10-08-at-15-19-35-1.jpg')">
                             <img src="https://i.ibb.co.com/twkss37q/Whats-App-Image-2026-10-08-at-15-19-35-1.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
@@ -314,7 +311,7 @@
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/60g0wGQg/IMG-9774.jpg')">
                             <img src="https://i.ibb.co.com/60g0wGQg/IMG-9774.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
-                        <!-- Set 2 (Duplikat untuk infinite loop) -->
+                        <!-- Duplikat untuk Infinite Loop -->
                         <div class="w-40 h-44 flex-shrink-0 rounded-2xl overflow-hidden bg-black/50 border border-white/10 p-1 cursor-pointer" onclick="showLightbox('https://i.ibb.co.com/twkss37q/Whats-App-Image-2026-10-08-at-15-19-35-1.jpg')">
                             <img src="https://i.ibb.co.com/twkss37q/Whats-App-Image-2026-10-08-at-15-19-35-1.jpg" class="w-full h-full object-cover rounded-xl">
                         </div>
@@ -347,11 +344,11 @@
                 </p>
 
                 <div class="bg-wedding-dark/90 p-6 rounded-3xl shadow-lg border border-white/5 space-y-2">
-                    <div class="w-10 h-10 bg-wedding-card rounded-full flex items-center justify-center mx-auto text-wedding-gold font-bold text-xs">DANA</div>
-                    <p class="font-serif text-xl font-bold tracking-wider text-wedding-gold" id="bca-num">083865833415</p>
-                    <p class="text-[11px] text-gray-300">a.n. Nisa</p>
+                    <div class="w-10 h-10 bg-wedding-card rounded-full flex items-center justify-center mx-auto text-wedding-gold font-bold text-xs">BCA</div>
+                    <p class="font-serif text-xl font-bold tracking-wider text-wedding-gold" id="bca-num">8810704463</p>
+                    <p class="text-[11px] text-gray-300">a.n. Diky</p>
                     <button onclick="copyText('8810704463')" class="bg-wedding-gold text-wedding-dark text-[11px] font-bold px-4 py-2 rounded-full hover:opacity-90 transition shadow">
-                        <i class="fa-regular fa-copy mr-1"></i> Salin Nomor DANA
+                        <i class="fa-regular fa-copy mr-1"></i> Salin Nomor Rekening
                     </button>
                 </div>
 
@@ -445,6 +442,18 @@
                 once: true,
                 offset: 50,
             });
+
+            // Otomatis Ambil Nama Tamu dari URL (?to=NamaTamu)
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestName = urlParams.get('to');
+            
+            if (guestName) {
+                // Ganti spasi jika menggunakan format %20 atau tanda plus (+)
+                const decodedName = decodeURIComponent(guestName.replace(/\+/g, ' '));
+                document.getElementById('guest-name').innerText = decodedName;
+                // Otomatis isi juga nama di form RSVP agar tamu tidak perlu mengetik ulang namanya
+                document.getElementById('rsvp-name').value = decodedName;
+            }
         });
 
         const bgMusic = document.getElementById('bg-music');
