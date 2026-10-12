@@ -406,7 +406,11 @@
                 <h2 class="font-serif text-2xl italic text-white">Nisa & Diki</h2>
                 <p class="text-[11px] text-gray-300 leading-relaxed px-2">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.</p>
                 <div class="w-10 h-[1px] bg-wedding-gold mx-auto my-2"></div>
-                <p class="text-[10px] text-wedding-muted">&copy; 2026 Nisa & Diki . DIBUAT OLEH IG.@rudiirwnke20.</p>
+                <p class="text-[10px] text-wedding-muted">&copy; 2026 Nisa & Diki Wedding. All Rights Reserved.</p>
+                <!-- KREDIT PEMBUAT -->
+                <p class="pt-2 text-[10px] text-gray-400">
+                    Created with <i class="fa-solid fa-heart text-wedding-gold mx-0.5"></i> by <a href="https://www.byrudid.store" target="_blank" class="text-wedding-gold font-medium hover:underline">www.byrudid.store</a>
+                </p>
             </div>
         </footer>
 
@@ -448,10 +452,8 @@
             const guestName = urlParams.get('to');
             
             if (guestName) {
-                // Ganti spasi jika menggunakan format %20 atau tanda plus (+)
                 const decodedName = decodeURIComponent(guestName.replace(/\+/g, ' '));
                 document.getElementById('guest-name').innerText = decodedName;
-                // Otomatis isi juga nama di form RSVP agar tamu tidak perlu mengetik ulang namanya
                 document.getElementById('rsvp-name').value = decodedName;
             }
         });
@@ -538,7 +540,7 @@
             lightbox.classList.add('hidden');
         }
 
-        // Countdown Timer Logic (Target: 20 Desember 2026)
+        // Real-time Countdown Timer (Target: 20 Desember 2026 pukul 08:00:00)
         const weddingDate = new Date("December 20, 2026 08:00:00").getTime();
 
         const timer = setInterval(function() {
@@ -595,4 +597,4 @@
         }
     </script>
 </body>
-</html>
+    </html>
