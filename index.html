@@ -386,17 +386,12 @@
                     <label class="block text-[10px] font-semibold text-wedding-gold uppercase tracking-wider mb-1.5">Ucapan & Doa</label>
                     <textarea id="rsvp-message" rows="3" required placeholder="Tuliskan ucapan dan doa restu..." class="w-full px-3.5 py-2.5 border border-white/10 rounded-2xl text-xs focus:outline-none focus:border-wedding-gold bg-wedding-dark text-white"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-wedding-gold text-wedding-dark text-[11px] font-bold uppercase tracking-widest py-3 rounded-2xl hover:opacity-90 transition shadow">Kirim Ucapan</button>
+                <button type="submit" id="submit-btn" class="w-full bg-wedding-gold text-wedding-dark text-[11px] font-bold uppercase tracking-widest py-3 rounded-2xl hover:opacity-90 transition shadow">Kirim Ucapan</button>
             </form>
 
             <div id="wishes-container" class="mt-6 space-y-3 max-h-64 overflow-y-auto pr-1">
-                <div class="bg-wedding-card/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/5 text-xs">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-semibold text-wedding-gold">Keluarga Besar</span>
-                        <span class="text-[10px] text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded-full font-medium border border-emerald-800/50">Hadir</span>
-                    </div>
-                    <p class="text-[11px] text-gray-300 leading-relaxed">Selamat berbahagia Nisa & Diki! Semoga Allah SWT menghimpun keduanya dalam kebaikan dan memberkahi pernikahan ini.</p>
-                </div>
+                <!-- Data ucapan akan dimuat secara real-time dari Google Sheets -->
+                <div class="text-center text-xs text-gray-400 py-4">Memuat ucapan...</div>
             </div>
         </section>
 
@@ -441,6 +436,9 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // URL WEB APP GOOGLE SHEETS ANDA
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyeGxpTSZgc7zI6UyKCrLC-VocuwW4o5dAM6iNDmyY_12izjE5Egesi83UhHtFFpqs_wQ/exec";
+
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
                 once: true,
@@ -456,6 +454,11 @@
                 document.getElementById('guest-name').innerText = decodedName;
                 document.getElementById('rsvp-name').value = decodedName;
             }
+
+            // Muat ucapan pertama kali saat halaman dibuka
+            loadWishes();
+            // Refresh otomatis setiap 10 detik agar real-time terlihat
+            setInterval(loadWishes, 10000);
         });
 
         const bgMusic = document.getElementById('bg-music');
@@ -567,34 +570,81 @@
             document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
         }, 1000);
 
+        // Fungsi Mengirim Ucapan ke Google Sheets
         function submitRsvp(event) {
             event.preventDefault();
-            const name = document.getElementById('rsvp-name').value;
-            const status = document.getElementById('rsvp-status').value;
-            const message = document.getElementById('rsvp-message').value;
-            const container = document.getElementById('wishes-container');
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Mengirim...";
 
-            const statusClass = status === 'Hadir' ? 'text-emerald-300 bg-emerald-950/60 border border-emerald-800/50' : 'text-amber-300 bg-amber-950/60 border border-amber-800/50';
+            const formData = {
+                name: document.getElementById('rsvp-name').value,
+                status: document.getElementById('rsvp-status').value,
+                message: document.getElementById('rsvp-message').value
+            };
 
-            const newCard = document.createElement('div');
-            newCard.className = 'bg-wedding-card/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/5 text-xs';
-            newCard.innerHTML = `
-                <div class="flex justify-between items-center mb-1">
-                    <span class="font-semibold text-wedding-gold">${escapeHtml(name)}</span>
-                    <span class="text-[10px] ${statusClass} px-2 py-0.5 rounded-full font-medium">${escapeHtml(status)}</span>
-                </div>
-                <p class="text-[11px] text-gray-300 leading-relaxed">${escapeHtml(message)}</p>
-            `;
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                alert("Terima kasih, ucapan dan konfirmasi kehadiran Anda telah dikirim.");
+                document.getElementById('rsvp-form').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Ucapan";
+                setTimeout(loadWishes, 1500); // Tunggu sebentar lalu muat ulang daftar ucapan
+            })
+            .catch(error => {
+                console.error('Error!', error);
+                alert("Gagal mengirim ucapan. Silakan coba lagi.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Kirim Ucapan";
+            });
+        }
 
-            container.prepend(newCard);
-            document.getElementById('rsvp-form').reset();
-            alert("Terima kasih, ucapan dan konfirmasi kehadiran Anda telah dikirim.");
+        // Fungsi Mengambil Daftar Ucapan secara Real-Time dari Google Sheets
+        function loadWishes() {
+            fetch(SCRIPT_URL)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('wishes-container');
+                container.innerHTML = "";
+
+                // Balik urutan agar ucapan terbaru berada di paling atas
+                data.reverse();
+
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="text-center text-xs text-gray-400 py-4">Belum ada ucapan.</div>';
+                    return;
+                }
+
+                data.forEach(row => {
+                    const statusClass = row.status === 'Hadir' 
+                        ? 'text-emerald-300 bg-emerald-950/60 border border-emerald-800/50' 
+                        : 'text-amber-300 bg-amber-950/60 border border-amber-800/50';
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-wedding-card/80 backdrop-blur-md p-4 rounded-2xl shadow-sm border border-white/5 text-xs';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-semibold text-wedding-gold">${escapeHtml(row.name)}</span>
+                            <span class="text-[10px] ${statusClass} px-2 py-0.5 rounded-full font-medium">${escapeHtml(row.status)}</span>
+                        </div>
+                        <p class="text-[11px] text-gray-300 leading-relaxed">${escapeHtml(row.message)}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => console.error('Error loading wishes:', error));
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            return text.toString().replace(/[&<>"']/g, function(m) { return map[m]; });
         }
     </script>
 </body>
-    </html>
+</html>
